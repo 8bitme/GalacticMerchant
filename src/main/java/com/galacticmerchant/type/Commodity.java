@@ -3,7 +3,7 @@ package com.galacticmerchant.type;
 public class Commodity {
     private final String name;
     private final Currency currency;
-    private final int value;
+    private final double value;
 
     public Commodity(String name, Currency currency, int value) {
         this.name = name;
@@ -19,7 +19,7 @@ public class Commodity {
         return currency;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
@@ -30,7 +30,7 @@ public class Commodity {
 
         Commodity commodity = (Commodity) o;
 
-        if (value != commodity.value) return false;
+        if (Double.compare(commodity.value, value) != 0) return false;
         if (name != null ? !name.equals(commodity.name) : commodity.name != null) return false;
         return currency != null ? currency.equals(commodity.currency) : commodity.currency == null;
 
@@ -38,9 +38,12 @@ public class Commodity {
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result;
+        long temp;
+        result = name != null ? name.hashCode() : 0;
         result = 31 * result + (currency != null ? currency.hashCode() : 0);
-        result = 31 * result + value;
+        temp = Double.doubleToLongBits(value);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 }
