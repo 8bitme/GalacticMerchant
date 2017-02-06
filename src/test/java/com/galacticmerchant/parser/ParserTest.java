@@ -183,4 +183,41 @@ public class ParserTest {
 
         assertThat(parser.answers.get(0), is("pish tegj glob glob is 42"));
     }
+
+    @Test
+    public void parse_twoNumeralQuestions_correctAnswerReturned() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "prok is V\n" +
+                "pish is X\n" +
+                "tegj is L\n" +
+                "glob glob Silver is 34 Credits\n" +
+                "glob prok Gold is 57800 Credits\n" +
+                "pish pish Iron is 3910 Credits\n" +
+                "how much is pish tegj glob glob ?\n"+
+                "how much is tegj glob glob glob?";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.answers.get(1), is("tegj glob glob glob is 53"));
+    }
+
+    @Test
+    public void parse_multipleNumeralQuestions_correctAnswerReturned() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "prok is V\n" +
+                "pish is X\n" +
+                "tegj is L\n" +
+                "glob glob Silver is 34 Credits\n" +
+                "glob prok Gold is 57800 Credits\n" +
+                "pish pish Iron is 3910 Credits\n" +
+                "how much is pish tegj glob glob ?\n"+
+                "how much is tegj glob glob glob?\n"+
+                "how much is prok?";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.answers.get(2), is("prok is 5"));
+    }
 }
