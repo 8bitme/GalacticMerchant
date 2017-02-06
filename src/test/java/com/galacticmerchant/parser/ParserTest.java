@@ -149,4 +149,38 @@ public class ParserTest {
         assertThat(iron.getValue(), is(equalTo(195.5)));
         assertThat(iron.getCurrency().getName(), is(equalTo("Credits")));
     }
+
+    @Test
+    public void parse_numeralQuestion_correctNumberOfAnswerReturned() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "prok is V\n" +
+                "pish is X\n" +
+                "tegj is L\n" +
+                "glob glob Silver is 34 Credits\n" +
+                "glob prok Gold is 57800 Credits\n" +
+                "pish pish Iron is 3910 Credits\n" +
+                "how much is pish tegj glob glob ?";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.answers.size(), is(1));
+    }
+
+    @Test
+    public void parse_numeralQuestion_correctAnswerReturned() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "prok is V\n" +
+                "pish is X\n" +
+                "tegj is L\n" +
+                "glob glob Silver is 34 Credits\n" +
+                "glob prok Gold is 57800 Credits\n" +
+                "pish pish Iron is 3910 Credits\n" +
+                "how much is pish tegj glob glob ?";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.answers.get(0), is("pish tegj glob glob is 42"));
+    }
 }

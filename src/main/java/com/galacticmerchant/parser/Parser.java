@@ -5,19 +5,18 @@ import com.galacticmerchant.type.Currency;
 import com.galacticmerchant.type.numeral.Numeral;
 import com.galacticmerchant.type.numeral.util.Factory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Parser {
 
+    public static final String NUMERAL_QUESTION_PREFIX = "how much is";
     final Map<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
     final Map<String, Commodity> commodityNameToCmmodityMap = new HashMap<>();
+    final List<String> answers = new LinkedList<>();
+
     private String conversionNotes;
 
     public Parser(String conversionNotes) {
@@ -32,9 +31,22 @@ public class Parser {
                 parseNumeralDefinition(noteI);
             } else if (!endsInQuestionMark) {
                 parseCommodityDefinition(noteI);
-
+            } else {
+                parsePricingQuestion(noteI);
             }
         });
+    }
+
+    private void parsePricingQuestion(String noteI) {
+        if (noteI.startsWith(NUMERAL_QUESTION_PREFIX)) {
+            String numeralStringToParse = noteI.substring(NUMERAL_QUESTION_PREFIX.length() + 1, noteI.lastIndexOf("?")).trim();
+
+            List<Integer> globalNumeralValues = Arrays.stream(numeralStringToParse.split(" ")).map(s -> globalNumeralToBaseNumeralMap.get(s).getValue()).collect(Collectors.toList());
+            double sumOfNumerals = sumNumeralValues(globalNumeralValues);
+
+            answers.add(numeralStringToParse + " is " + (int) sumOfNumerals);
+        }
+
     }
 
     private void parseCommodityDefinition(String noteI) {
@@ -83,7 +95,7 @@ public class Parser {
                 } else {
                     numeralSum += currentValue;
                 }
-            } else if(!previousWasLessThanCurrent) {
+            } else if (!previousWasLessThanCurrent) {
                 numeralSum += currentValue;
             }
         }
