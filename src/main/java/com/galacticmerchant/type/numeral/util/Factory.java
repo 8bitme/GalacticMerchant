@@ -32,4 +32,8 @@ public class Factory {
 
         return associatedNumeral;
     }
+
+    public static Optional<Numeral> fromRomanNumeral(String romanNumeral) {
+        return  fromRomanNumeral(romanNumeral.charAt(0));
+    }
 }
