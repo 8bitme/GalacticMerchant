@@ -5,7 +5,7 @@ public class Commodity {
     private final Currency currency;
     private final double value;
 
-    public Commodity(String name, Currency currency, int value) {
+    public Commodity(String name, Currency currency, double value) {
         this.name = name;
         this.currency = currency;
         this.value = value;

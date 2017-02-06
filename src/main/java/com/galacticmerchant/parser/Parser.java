@@ -5,8 +5,10 @@ import com.galacticmerchant.type.Currency;
 import com.galacticmerchant.type.numeral.Numeral;
 import com.galacticmerchant.type.numeral.util.Factory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -36,19 +38,19 @@ public class Parser {
     }
 
     private void parseCommodityDefinition(String noteI) {
-        int numeralSum = 0;
 
         String commodityName = "";
         String currencyName = "";
-        int units = -1;
+        double units = -1;
         boolean previousWasNumeral = false;
+        List<Integer> numeralValues = new ArrayList<>();
         String[] words = noteI.split(" ");
 
         for (String wordI : words) {
             boolean isNumeral = globalNumeralToBaseNumeralMap.containsKey(wordI);
             if (isNumeral) {
                 previousWasNumeral = true;
-                numeralSum+= globalNumeralToBaseNumeralMap.get(wordI).getValue();
+                numeralValues.add(globalNumeralToBaseNumeralMap.get(wordI).getValue());
             } else if (isCommodity(previousWasNumeral)) {
                 commodityName = wordI;
                 previousWasNumeral = false;
@@ -59,14 +61,40 @@ public class Parser {
             }
 
         }
-        commodityNameToCmmodityMap.put(commodityName, new Commodity(commodityName, new Currency(currencyName), units/numeralSum));
+
+        double numeralSum = sumNumeralValues(numeralValues);
+        commodityNameToCmmodityMap.put(commodityName, new Commodity(commodityName, new Currency(currencyName), (units / numeralSum)));
     }
 
-    private boolean isCurrencyName(int units) {
+    private double sumNumeralValues(List<Integer> numeralValues) {
+        double numeralSum = 0;
+        boolean previousWasLessThanCurrent = false;
+        for (int i = 0; i < numeralValues.size(); i++) {
+            Integer currentValue = numeralValues.get(i);
+
+            if (i != numeralValues.size() - 1) {
+                Integer nextValue = numeralValues.get(i + 1);
+
+                if (currentValue < nextValue) {
+                    numeralSum += nextValue - currentValue;
+                    previousWasLessThanCurrent = true;
+                } else if (previousWasLessThanCurrent) {
+                    previousWasLessThanCurrent = false;
+                } else {
+                    numeralSum += currentValue;
+                }
+            } else if(!previousWasLessThanCurrent) {
+                numeralSum += currentValue;
+            }
+        }
+        return numeralSum;
+    }
+
+    private boolean isCurrencyName(double units) {
         return units > -1;
     }
 
-    private boolean isUnits(String commodityName, int units, String wordI) {
+    private boolean isUnits(String commodityName, double units, String wordI) {
         return !commodityName.isEmpty() && !"is".equals(wordI) && units == -1;
     }
 
