@@ -40,13 +40,27 @@ public class Parser {
     private void parsePricingQuestion(String noteI) {
         if (noteI.startsWith(NUMERAL_QUESTION_PREFIX)) {
             String numeralStringToParse = noteI.substring(NUMERAL_QUESTION_PREFIX.length() + 1, noteI.lastIndexOf("?")).trim();
-
-            List<Integer> globalNumeralValues = Arrays.stream(numeralStringToParse.split(" ")).map(s -> globalNumeralToBaseNumeralMap.get(s).getValue()).collect(Collectors.toList());
-            double sumOfNumerals = sumNumeralValues(globalNumeralValues);
-
+            double sumOfNumerals = calculateSumOfGlobalNumeralString(numeralStringToParse);
             answers.add(numeralStringToParse + " is " + (int) sumOfNumerals);
+        } else if (noteI.startsWith(getCommodityQuestionForCurrency("Credits"))) {
+            String numeralStringToParseWithCommodity = noteI.substring(getCommodityQuestionForCurrency("Credits").length(), noteI.lastIndexOf("?")).trim();
+            String commodity = numeralStringToParseWithCommodity.substring(numeralStringToParseWithCommodity.lastIndexOf(" ") + 1);
+            String numeralString = numeralStringToParseWithCommodity.substring(0, numeralStringToParseWithCommodity.lastIndexOf(" "));
+
+            double sumOfNumerals = calculateSumOfGlobalNumeralString(numeralString);
+
+            answers.add(numeralStringToParseWithCommodity + " is " + (int)(sumOfNumerals * commodityNameToCmmodityMap.get(commodity).getValue()) + " Credits");
         }
 
+    }
+
+    private double calculateSumOfGlobalNumeralString(String numeralStringToParse) {
+        List<Integer> globalNumeralValues = Arrays.stream(numeralStringToParse.split(" ")).map(s -> globalNumeralToBaseNumeralMap.get(s).getValue()).collect(Collectors.toList());
+        return sumNumeralValues(globalNumeralValues);
+    }
+
+    private String getCommodityQuestionForCurrency(String currency) {
+        return String.format("how many %s is ", currency);
     }
 
     private void parseCommodityDefinition(String noteI) {

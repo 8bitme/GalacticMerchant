@@ -220,4 +220,58 @@ public class ParserTest {
 
         assertThat(parser.answers.get(2), is("prok is 5"));
     }
+
+    @Test
+    public void parse_singleCommodityQuestion_correctAnswerReturned() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "prok is V\n" +
+                "pish is X\n" +
+                "tegj is L\n" +
+                "glob glob Silver is 34 Credits\n" +
+                "glob prok Gold is 57800 Credits\n" +
+                "pish pish Iron is 3910 Credits\n" +
+                "how many Credits is glob prok Silver ?";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.answers.get(0), is("glob prok Silver is 68 Credits"));
+    }
+
+    @Test
+    public void parse_twoCommodityQuestion_correctAnswerReturned() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "prok is V\n" +
+                "pish is X\n" +
+                "tegj is L\n" +
+                "glob glob Silver is 34 Credits\n" +
+                "glob prok Gold is 57800 Credits\n" +
+                "pish pish Iron is 3910 Credits\n" +
+                "how many Credits is glob prok Silver ?\n" +
+                "how many Credits is glob prok Gold ?";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.answers.get(1), is("glob prok Gold is 57800 Credits"));
+    }
+
+    @Test
+    public void parse_multipleCommodityQuestion_correctAnswerReturned() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "prok is V\n" +
+                "pish is X\n" +
+                "tegj is L\n" +
+                "glob glob Silver is 34 Credits\n" +
+                "glob prok Gold is 57800 Credits\n" +
+                "pish pish Iron is 3910 Credits\n" +
+                "how many Credits is glob prok Silver ?\n" +
+                "how many Credits is glob prok Gold ?\n" +
+                "how many Credits is glob prok Iron ?";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.answers.get(2), is("glob prok Iron is 782 Credits"));
+    }
 }
