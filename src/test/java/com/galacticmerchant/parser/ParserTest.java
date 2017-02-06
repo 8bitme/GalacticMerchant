@@ -48,4 +48,37 @@ public class ParserTest {
         assertThat(parser.globalNumeralToBaseNumeralMap.containsKey("pish"), is(true));
         assertThat(parser.globalNumeralToBaseNumeralMap.containsKey("tegj"), is(true));
     }
+
+    @Test
+    public void parse_singleNumeralDefAndSingleCommodityDef_commodityDefinedCorrectly() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "glob glob Silver is 34 Credits";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.commodityNameToCmmodityMap.containsKey("Silver"), is(true));
+    }
+
+    @Test
+    public void parse_singleNumeralDefAndSingleCommodityDef_currencyParsedCorrectly() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "glob glob Silver is 34 Credits";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.commodityNameToCmmodityMap.get("Silver").getCurrency().getName() , is(equalTo("Credits")));
+    }
+
+    @Test
+    public void parse_singleNumeralDefAndSingleCommodityDef_unitsCalculatedCorrectly() throws Exception {
+        String conversionNotes = "glob is I\n" +
+                "glob glob Silver is 34 Credits";
+
+        Parser parser = new Parser(conversionNotes);
+        parser.parse();
+
+        assertThat(parser.commodityNameToCmmodityMap.get("Silver").getValue() , is(equalTo(17)));
+    }
 }
