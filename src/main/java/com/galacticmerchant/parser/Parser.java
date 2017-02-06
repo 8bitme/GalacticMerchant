@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 
 public class Parser {
 
-    public static final String NUMERAL_QUESTION_PREFIX = "how much is";
-    public static final String UNKNOWN_ANSWER = "I have no idea what you are talking about";
+    private static final String NUMERAL_QUESTION_PREFIX = "how much is";
+    private static final String UNKNOWN_ANSWER = "I have no idea what you are talking about";
     final Map<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
     final Map<String, Commodity> commodityNameToCmmodityMap = new HashMap<>();
     final List<String> answers = new LinkedList<>();
@@ -24,7 +24,7 @@ public class Parser {
         this.conversionNotes = conversionNotes;
     }
 
-    public void parse() {
+    public String parse() {
         Arrays.stream(conversionNotes.split("\\n")).forEach(noteI -> {
             int numberOfWords = countNumberOfWords(noteI);
             boolean endsInQuestionMark = endsWith('?', noteI);
@@ -36,6 +36,9 @@ public class Parser {
                 parsePricingQuestion(noteI);
             }
         });
+
+        Optional<String> combinedResults = answers.stream().reduce((s, s2) -> s + "\n" + s2);
+        return combinedResults.map(s -> s).orElse("");
     }
 
     private void parsePricingQuestion(String noteI) {
