@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class Parser {
 
     public static final String NUMERAL_QUESTION_PREFIX = "how much is";
+    public static final String UNKNOWN_ANSWER = "I have no idea what you are talking about";
     final Map<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
     final Map<String, Commodity> commodityNameToCmmodityMap = new HashMap<>();
     final List<String> answers = new LinkedList<>();
@@ -49,7 +50,9 @@ public class Parser {
 
             double sumOfNumerals = calculateSumOfGlobalNumeralString(numeralString);
 
-            answers.add(numeralStringToParseWithCommodity + " is " + (int)(sumOfNumerals * commodityNameToCmmodityMap.get(commodity).getValue()) + " Credits");
+            answers.add(numeralStringToParseWithCommodity + " is " + (int) (sumOfNumerals * commodityNameToCmmodityMap.get(commodity).getValue()) + " Credits");
+        } else {
+            answers.add(UNKNOWN_ANSWER);
         }
 
     }
