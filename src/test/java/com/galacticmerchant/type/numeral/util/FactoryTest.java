@@ -30,4 +30,14 @@ public class FactoryTest {
         assertThat(Factory.fromRomanNumeral('C').get(), is(equalTo(new OneHundred())));
     }
 
+    @Test
+    public void fromRomanNumeral_invalidRomanNumeralsString_emptyOptionalReturned() throws Exception {
+        assertThat(Factory.fromRomanNumeral("Z").isPresent(), is(false));
+    }
+
+    @Test
+    public void fromRomanNumeral_validRomanNumeralString_optionalContainsCorrectInstance() throws Exception {
+        assertThat(Factory.fromRomanNumeral("C").get(), is(equalTo(new OneHundred())));
+    }
+
 }
