@@ -1,5 +1,6 @@
 package com.galacticmerchant.parser;
 
+import com.galacticmerchant.parser.question.QuestionParserFactory;
 import com.galacticmerchant.type.Commodity;
 import com.galacticmerchant.type.Currency;
 import com.galacticmerchant.type.numeral.Numeral;
@@ -7,11 +8,9 @@ import com.galacticmerchant.type.numeral.Numeral;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Parser {
 
-    private static final String NUMERAL_QUESTION_PREFIX = "how much is";
     private static final String UNKNOWN_ANSWER = "I have no idea what you are talking about";
     final Map<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
     final Map<String, Commodity> commodityNameToCommodityMap = new HashMap<>();
@@ -41,31 +40,12 @@ public class Parser {
     }
 
     private void parsePricingQuestion(String noteI) {
-        if (noteI.startsWith(NUMERAL_QUESTION_PREFIX)) {
-            String numeralStringToParse = noteI.substring(NUMERAL_QUESTION_PREFIX.length() + 1, noteI.lastIndexOf("?")).trim();
-            double sumOfNumerals = calculateSumOfGlobalNumeralString(numeralStringToParse);
-            answers.add(numeralStringToParse + " is " + (int) sumOfNumerals);
-        } else if (noteI.startsWith(getCommodityQuestionForCurrency("Credits"))) {
-            String numeralStringToParseWithCommodity = noteI.substring(getCommodityQuestionForCurrency("Credits").length(), noteI.lastIndexOf("?")).trim();
-            String commodity = numeralStringToParseWithCommodity.substring(numeralStringToParseWithCommodity.lastIndexOf(" ") + 1);
-            String numeralString = numeralStringToParseWithCommodity.substring(0, numeralStringToParseWithCommodity.lastIndexOf(" "));
+        String answer =
+                QuestionParserFactory.getParserForText(noteI)
+                        .map(questionParser -> questionParser.parse(noteI, globalNumeralToBaseNumeralMap, commodityNameToCommodityMap))
+                        .orElse(UNKNOWN_ANSWER);
 
-            double sumOfNumerals = calculateSumOfGlobalNumeralString(numeralString);
-
-            answers.add(numeralStringToParseWithCommodity + " is " + (int) (sumOfNumerals * commodityNameToCommodityMap.get(commodity).getValue()) + " Credits");
-        } else {
-            answers.add(UNKNOWN_ANSWER);
-        }
-
-    }
-
-    private double calculateSumOfGlobalNumeralString(String numeralStringToParse) {
-        List<Integer> globalNumeralValues = Arrays.stream(numeralStringToParse.split(" ")).map(s -> globalNumeralToBaseNumeralMap.get(s).getValue()).collect(Collectors.toList());
-        return sumNumeralValues(globalNumeralValues);
-    }
-
-    private String getCommodityQuestionForCurrency(String currency) {
-        return String.format("how many %s is ", currency);
+        answers.add(answer);
     }
 
     private void parseCommodityDefinition(String noteI) {

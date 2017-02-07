@@ -58,7 +58,7 @@ public class ParserTest {
         Parser parser = new Parser(conversionNotes);
         parser.parse();
 
-        assertThat(parser.commodityNameToCmmodityMap.containsKey("Silver"), is(true));
+        assertThat(parser.commodityNameToCommodityMap.containsKey("Silver"), is(true));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ParserTest {
         Parser parser = new Parser(conversionNotes);
         parser.parse();
 
-        assertThat(parser.commodityNameToCmmodityMap.get("Silver").getCurrency().getName(), is(equalTo("Credits")));
+        assertThat(parser.commodityNameToCommodityMap.get("Silver").getCurrency().getName(), is(equalTo("Credits")));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ParserTest {
         Parser parser = new Parser(conversionNotes);
         parser.parse();
 
-        assertThat(parser.commodityNameToCmmodityMap.get("Silver").getValue(), is(equalTo(17.0)));
+        assertThat(parser.commodityNameToCommodityMap.get("Silver").getValue(), is(equalTo(17.0)));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ParserTest {
         Parser parser = new Parser(conversionNotes);
         parser.parse();
 
-        assertThat(parser.commodityNameToCmmodityMap.size(), is(equalTo(2)));
+        assertThat(parser.commodityNameToCommodityMap.size(), is(equalTo(2)));
     }
 
     @Test
@@ -110,12 +110,12 @@ public class ParserTest {
         Parser parser = new Parser(conversionNotes);
         parser.parse();
 
-        Commodity silver = parser.commodityNameToCmmodityMap.get("Silver");
+        Commodity silver = parser.commodityNameToCommodityMap.get("Silver");
         assertThat(silver.getName(), is(equalTo("Silver")));
         assertThat(silver.getValue(), is(equalTo(17.0)));
         assertThat(silver.getCurrency().getName(), is(equalTo("Credits")));
 
-        Commodity gold = parser.commodityNameToCmmodityMap.get("Gold");
+        Commodity gold = parser.commodityNameToCommodityMap.get("Gold");
         assertThat(gold.getName(), is(equalTo("Gold")));
         assertThat(gold.getValue(), is(equalTo(14450.0)));
         assertThat(gold.getCurrency().getName(), is(equalTo("Credits")));
@@ -134,17 +134,17 @@ public class ParserTest {
         Parser parser = new Parser(conversionNotes);
         parser.parse();
 
-        Commodity silver = parser.commodityNameToCmmodityMap.get("Silver");
+        Commodity silver = parser.commodityNameToCommodityMap.get("Silver");
         assertThat(silver.getName(), is(equalTo("Silver")));
         assertThat(silver.getValue(), is(equalTo(17.0)));
         assertThat(silver.getCurrency().getName(), is(equalTo("Credits")));
 
-        Commodity gold = parser.commodityNameToCmmodityMap.get("Gold");
+        Commodity gold = parser.commodityNameToCommodityMap.get("Gold");
         assertThat(gold.getName(), is(equalTo("Gold")));
         assertThat(gold.getValue(), is(equalTo(14450.0)));
         assertThat(gold.getCurrency().getName(), is(equalTo("Credits")));
 
-        Commodity iron = parser.commodityNameToCmmodityMap.get("Iron");
+        Commodity iron = parser.commodityNameToCommodityMap.get("Iron");
         assertThat(iron.getName(), is(equalTo("Iron")));
         assertThat(iron.getValue(), is(equalTo(195.5)));
         assertThat(iron.getCurrency().getName(), is(equalTo("Credits")));
