@@ -3,7 +3,6 @@ package com.galacticmerchant.parser;
 import com.galacticmerchant.type.Commodity;
 import com.galacticmerchant.type.Currency;
 import com.galacticmerchant.type.numeral.Numeral;
-import com.galacticmerchant.type.numeral.util.Factory;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -149,7 +148,7 @@ public class Parser {
         String globalNumeral = matcher.group(1);
         String baseNumeral = matcher.group(2);
 
-        Optional<Numeral> numeralOptional = Factory.fromRomanNumeral(baseNumeral);
+        Optional<Numeral> numeralOptional = Numeral.fromRomanNumeral(baseNumeral);
 
         if (numeralOptional.isPresent()) {
             globalNumeralToBaseNumeralMap.put(globalNumeral, numeralOptional.get());
