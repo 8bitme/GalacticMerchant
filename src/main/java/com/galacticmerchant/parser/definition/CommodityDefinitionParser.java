@@ -4,6 +4,7 @@ import com.galacticmerchant.parser.util.NumeralUtil;
 import com.galacticmerchant.type.Commodity;
 import com.galacticmerchant.type.Currency;
 import com.galacticmerchant.type.numeral.Numeral;
+import com.galacticmerchant.type.numeral.util.NumeralRule;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,8 +72,24 @@ public class CommodityDefinitionParser extends DefinitionParser {
                 occurrences = 1;
             }
 
+            throwErrorIfPreviousNumeralIsNotSubtractableFromCurrent(globalNumeralToBaseNumeralMap, previousNumeral, currentNumeral);
+            throwErrorIfPreviousNumeralMayNotBeSubtracted(globalNumeralToBaseNumeralMap, previousNumeral, currentNumeral);
             throwErrorIfNoneRepeatableNumeralIsRepated(globalNumeralToBaseNumeralMap, occurrences, currentNumeral);
             throwExceptionIfNumeralRepeatedTooManyTimes(globalNumeralToBaseNumeralMap, occurrences, currentNumeral);
+        }
+    }
+
+    private void throwErrorIfPreviousNumeralIsNotSubtractableFromCurrent(Map<String, Numeral> globalNumeralToBaseNumeralMap, Numeral previousNumeral, Numeral currentNumeral) {
+        if (previousNumeral != currentNumeral && NumeralRule.canBeSubtracted(previousNumeral) && NumeralRule.cannotSubtractNumeralFromAnother(previousNumeral, currentNumeral)) {
+            List<String> galacticNumeralName = getGalacticNumeralName(globalNumeralToBaseNumeralMap, previousNumeral);
+            throw new IllegalArgumentException(galacticNumeralName.get(0) + " cannot be subtracted from the subsequent number");
+        }
+    }
+
+    private void throwErrorIfPreviousNumeralMayNotBeSubtracted(Map<String, Numeral> globalNumeralToBaseNumeralMap, Numeral previousNumeral, Numeral currentNumeral) {
+        if (previousNumeral != currentNumeral && NumeralRule.cannotSubtractNumeralFromAnother(previousNumeral, currentNumeral)) {
+            List<String> galacticNumeralName = getGalacticNumeralName(globalNumeralToBaseNumeralMap, previousNumeral);
+            throw new IllegalArgumentException(galacticNumeralName.get(0) + " cannot appear before a larger number as it cannot be subtracted");
         }
     }
 

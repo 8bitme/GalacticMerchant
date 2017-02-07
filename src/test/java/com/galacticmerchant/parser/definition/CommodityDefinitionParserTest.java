@@ -13,7 +13,6 @@ public class CommodityDefinitionParserTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-
     @Test
     public void parse_numeralRepeatedTooManyTimes_errorThrown() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
@@ -75,6 +74,38 @@ public class CommodityDefinitionParserTest {
 
         HashMap<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
         globalNumeralToBaseNumeralMap.put("glob", Numeral.FIVE);
+        HashMap<String, Commodity> commodityNameToCommodityMap = new HashMap<>();
+
+        commodityDefinitionParser.parse(inputToParse, globalNumeralToBaseNumeralMap, commodityNameToCommodityMap);
+    }
+
+    @Test
+    public void parse_numeralCannotBeSubtracted_errorThrown() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("five cannot appear before a larger number as it cannot be subtracted");
+
+        CommodityDefinitionParser commodityDefinitionParser = new CommodityDefinitionParser();
+        String inputToParse = "five oneHundred Silver is 34 Credits";
+
+        HashMap<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
+        globalNumeralToBaseNumeralMap.put("five", Numeral.FIVE);
+        globalNumeralToBaseNumeralMap.put("oneHundred", Numeral.ONE_HUNDRED);
+        HashMap<String, Commodity> commodityNameToCommodityMap = new HashMap<>();
+
+        commodityDefinitionParser.parse(inputToParse, globalNumeralToBaseNumeralMap, commodityNameToCommodityMap);
+    }
+
+    @Test
+    public void parse_numeralCannotBeSubtractedFromSubsequentNumeral_errorThrown() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("one cannot be subtracted from the subsequent number");
+
+        CommodityDefinitionParser commodityDefinitionParser = new CommodityDefinitionParser();
+        String inputToParse = "one fifty Silver is 34 Credits";
+
+        HashMap<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
+        globalNumeralToBaseNumeralMap.put("one", Numeral.ONE);
+        globalNumeralToBaseNumeralMap.put("fifty", Numeral.FIFTY);
         HashMap<String, Commodity> commodityNameToCommodityMap = new HashMap<>();
 
         commodityDefinitionParser.parse(inputToParse, globalNumeralToBaseNumeralMap, commodityNameToCommodityMap);
