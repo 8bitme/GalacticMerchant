@@ -37,6 +37,10 @@ public class Parser {
         return new Parser(conversionNotes);
     }
 
+    public static void fromFileAndOutput(String filePathAndFileName) throws IOException {
+        fromFile(filePathAndFileName).parse();
+    }
+
     public String parse() {
         Arrays.stream(conversionNotes.split("\\n")).forEach(noteI -> {
             Optional<DefinitionParser> definitionParserOptional = DefinitionParserFactory.getParserForText(noteI);
@@ -48,7 +52,9 @@ public class Parser {
         });
 
         Optional<String> combinedResults = answers.stream().reduce((s, s2) -> s + "\n" + s2);
-        return combinedResults.map(s -> s).orElse("");
+        String finalOutput = combinedResults.map(s -> s).orElse("");
+        System.out.println(finalOutput);
+        return finalOutput;
     }
 
     private void parsePricingQuestion(String noteI) {

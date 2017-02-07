@@ -332,4 +332,9 @@ public class ParserTest {
 
         assertThat(answer, is(equalTo(expectedAnswer)));
     }
+
+    @Test
+    public void fromFileAndOutput_fileExists_answerOutputToStandardOutput() throws Exception {
+        Parser.fromFileAndOutput(ParserTest.class.getResource("galacticExchange1.txt").getFile());
+    }
 }
