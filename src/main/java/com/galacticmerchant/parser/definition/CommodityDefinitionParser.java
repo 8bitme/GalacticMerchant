@@ -83,7 +83,7 @@ public class CommodityDefinitionParser extends DefinitionParser {
     }
 
     private void throwErrorIfPreviousNumeralMayNotBeSubtracted(Map<String, Numeral> globalNumeralToBaseNumeralMap, Numeral previousNumeral, Numeral currentNumeral) {
-        if (previousNumeral != currentNumeral && NumeralRule.cannotSubtractNumeralFromAnother(previousNumeral, currentNumeral)) {
+        if (previousNumeral.getValue() < currentNumeral.getValue() && previousNumeral != currentNumeral && NumeralRule.cannotSubtractNumeralFromAnother(previousNumeral, currentNumeral)) {
             List<String> galacticNumeralName = getGalacticNumeralName(globalNumeralToBaseNumeralMap, previousNumeral);
             throw new IllegalArgumentException(galacticNumeralName.get(0) + " cannot appear before a larger number as it cannot be subtracted");
         }
