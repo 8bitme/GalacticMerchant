@@ -18,11 +18,7 @@ public class CommodityDefinitionParser extends DefinitionParser {
 
     @Override
     public boolean canParse(String inputToParse) {
-        return !endsWith('?', inputToParse);
-    }
-
-    private boolean endsWith(char charToCheckFor, String noteI) {
-        return noteI.lastIndexOf(charToCheckFor) != -1;
+        return doesNotEndsWithQuestionMark(inputToParse) && DEFINITION_PATTERN.matcher(inputToParse).find();
     }
 
     @Override
