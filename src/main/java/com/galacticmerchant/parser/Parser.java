@@ -14,7 +14,7 @@ public class Parser {
     private static final String NUMERAL_QUESTION_PREFIX = "how much is";
     private static final String UNKNOWN_ANSWER = "I have no idea what you are talking about";
     final Map<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
-    final Map<String, Commodity> commodityNameToCmmodityMap = new HashMap<>();
+    final Map<String, Commodity> commodityNameToCommodityMap = new HashMap<>();
     final List<String> answers = new LinkedList<>();
 
     private String conversionNotes;
@@ -52,7 +52,7 @@ public class Parser {
 
             double sumOfNumerals = calculateSumOfGlobalNumeralString(numeralString);
 
-            answers.add(numeralStringToParseWithCommodity + " is " + (int) (sumOfNumerals * commodityNameToCmmodityMap.get(commodity).getValue()) + " Credits");
+            answers.add(numeralStringToParseWithCommodity + " is " + (int) (sumOfNumerals * commodityNameToCommodityMap.get(commodity).getValue()) + " Credits");
         } else {
             answers.add(UNKNOWN_ANSWER);
         }
@@ -94,7 +94,7 @@ public class Parser {
         }
 
         double numeralSum = sumNumeralValues(numeralValues);
-        commodityNameToCmmodityMap.put(commodityName, new Commodity(commodityName, new Currency(currencyName), (units / numeralSum)));
+        commodityNameToCommodityMap.put(commodityName, new Commodity(commodityName, new Currency(currencyName), (units / numeralSum)));
     }
 
     private double sumNumeralValues(List<Integer> numeralValues) {
