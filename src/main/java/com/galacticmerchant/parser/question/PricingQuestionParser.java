@@ -21,7 +21,7 @@ public class PricingQuestionParser extends QuestionParser {
     @Override
     public String parse(String inputToParse, Map<String, Numeral> globalNumeralToBaseNumeralMap, Map<String, Commodity> commodityNameToCommodityMap) {
         String numeralStringToParse = inputToParse.substring(NUMERAL_QUESTION_PREFIX.length() + 1, inputToParse.lastIndexOf("?")).trim();
-        double sumOfNumerals = calculateSumOfGlobalNumeralString(numeralStringToParse, globalNumeralToBaseNumeralMap);
+        double sumOfNumerals = validateNumeralStringAndCalculateSum(numeralStringToParse, globalNumeralToBaseNumeralMap);
         return outputAnswer(numeralStringToParse, sumOfNumerals);
     }
 

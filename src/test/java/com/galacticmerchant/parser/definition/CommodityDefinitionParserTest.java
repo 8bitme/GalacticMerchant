@@ -8,6 +8,10 @@ import org.junit.rules.ExpectedException;
 
 import java.util.HashMap;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
+
 public class CommodityDefinitionParserTest {
 
     @Rule
@@ -111,4 +115,39 @@ public class CommodityDefinitionParserTest {
         commodityDefinitionParser.parse(inputToParse, globalNumeralToBaseNumeralMap, commodityNameToCommodityMap);
     }
 
+    @Test
+    public void parse_MMVI_2006() throws Exception {
+        CommodityDefinitionParser commodityDefinitionParser = new CommodityDefinitionParser();
+        String inputToParse = "thousand thousand five one Silver is 2006 Credits";
+
+        HashMap<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
+        globalNumeralToBaseNumeralMap.put("one", Numeral.ONE);
+        globalNumeralToBaseNumeralMap.put("five", Numeral.FIVE);
+        globalNumeralToBaseNumeralMap.put("thousand", Numeral.ONE_THOUSAND);
+        HashMap<String, Commodity> commodityNameToCommodityMap = new HashMap<>();
+
+        commodityDefinitionParser.parse(inputToParse, globalNumeralToBaseNumeralMap, commodityNameToCommodityMap);
+
+        assertThat(commodityNameToCommodityMap.get("Silver").getValue(), is(equalTo(1.0)));
+    }
+
+    @Test
+    public void parse_MCMXLIV_1944() throws Exception {
+        CommodityDefinitionParser commodityDefinitionParser = new CommodityDefinitionParser();
+        String inputToParse = "thousand hundred  thousand ten fifty one five Silver is 1944 Credits";
+
+        HashMap<String, Numeral> globalNumeralToBaseNumeralMap = new HashMap<>();
+        globalNumeralToBaseNumeralMap.put("one", Numeral.ONE);
+        globalNumeralToBaseNumeralMap.put("five", Numeral.FIVE);
+        globalNumeralToBaseNumeralMap.put("ten", Numeral.TEN);
+        globalNumeralToBaseNumeralMap.put("fifty", Numeral.FIFTY);
+        globalNumeralToBaseNumeralMap.put("hundred", Numeral.ONE_HUNDRED);
+        globalNumeralToBaseNumeralMap.put("fivehundred", Numeral.FIVE_HUNDRED);
+        globalNumeralToBaseNumeralMap.put("thousand", Numeral.ONE_THOUSAND);
+        HashMap<String, Commodity> commodityNameToCommodityMap = new HashMap<>();
+
+        commodityDefinitionParser.parse(inputToParse, globalNumeralToBaseNumeralMap, commodityNameToCommodityMap);
+
+        assertThat(commodityNameToCommodityMap.get("Silver").getValue(), is(equalTo(1.0)));
+    }
 }

@@ -27,7 +27,7 @@ public class CommodityQuestionParser extends QuestionParser {
         String commodity = numeralStringToParseWithCommodity.substring(numeralStringToParseWithCommodity.lastIndexOf(" ") + 1);
         String numeralString = numeralStringToParseWithCommodity.substring(0, numeralStringToParseWithCommodity.lastIndexOf(" "));
 
-        double sumOfNumerals = calculateSumOfGlobalNumeralString(numeralString, globalNumeralToBaseNumeralMap);
+        double sumOfNumerals = validateNumeralStringAndCalculateSum(numeralString, globalNumeralToBaseNumeralMap);
 
         return outputAnswer(commodityNameToCommodityMap, numeralStringToParseWithCommodity, commodity, sumOfNumerals);
     }

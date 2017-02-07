@@ -17,8 +17,10 @@ public abstract class QuestionParser {
 
     public abstract String parse(String inputToParse, Map<String, Numeral> globalNumeralToBaseNumeralMap, Map<String, Commodity> commodityNameToCommodityMap);
 
-    protected double calculateSumOfGlobalNumeralString(String numeralStringToParse, Map<String, Numeral> globalNumeralToBaseNumeralMap) {
-        List<Integer> globalNumeralValues = Arrays.stream(numeralStringToParse.split(" ")).map(s -> globalNumeralToBaseNumeralMap.get(s).getValue()).collect(Collectors.toList());
-        return NumeralUtil.sumNumeralValues(globalNumeralValues);
+    protected double validateNumeralStringAndCalculateSum(String numeralStringToParse, Map<String, Numeral> globalNumeralToBaseNumeralMap) {
+        List<Numeral> numeralList = Arrays.stream(numeralStringToParse.split(" ")).map(s -> globalNumeralToBaseNumeralMap.get(s)).collect(Collectors.toList());
+
+        NumeralUtil.throwErrorIfNumeralOccurencesAreInvalid(globalNumeralToBaseNumeralMap, numeralList);
+        return NumeralUtil.sumNumeralValues(numeralList);
     }
 }
