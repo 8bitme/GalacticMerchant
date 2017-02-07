@@ -5,13 +5,12 @@ import com.galacticmerchant.parser.definition.DefinitionParserFactory;
 import com.galacticmerchant.parser.question.QuestionParserFactory;
 import com.galacticmerchant.type.Commodity;
 import com.galacticmerchant.type.numeral.Numeral;
+import org.apache.commons.io.IOUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.*;
 
 public class Parser {
 
@@ -22,8 +21,20 @@ public class Parser {
 
     private String conversionNotes;
 
-    public Parser(String conversionNotes) {
+    private Parser(String conversionNotes) {
         this.conversionNotes = conversionNotes;
+    }
+
+    public static Parser fromNotesString(String conversionNotes) {
+        return new Parser(conversionNotes);
+    }
+
+    public static Parser fromFile(String filePathAndFileName) throws IOException {
+        String conversionNotes;
+        try (FileInputStream inputStream = new FileInputStream(filePathAndFileName)) {
+            conversionNotes = IOUtils.toString(inputStream, Charset.forName("UTF-8"));
+        }
+        return new Parser(conversionNotes);
     }
 
     public String parse() {

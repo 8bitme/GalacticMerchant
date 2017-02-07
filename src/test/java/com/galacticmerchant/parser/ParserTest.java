@@ -11,7 +11,7 @@ public class ParserTest {
 
     @Test
     public void parse_singleNumeralDef_globalNumeralPopulatedCorrectly() throws Exception {
-        Parser parser = new Parser("glob is I");
+        Parser parser = Parser.fromNotesString("glob is I");
         parser.parse();
 
         assertThat(parser.globalNumeralToBaseNumeralMap.containsKey("glob"), is(true));
@@ -19,7 +19,7 @@ public class ParserTest {
 
     @Test
     public void parse_singleNumeralDef_baseNumeralMappedCorrectly() throws Exception {
-        Parser parser = new Parser("glob is I");
+        Parser parser = Parser.fromNotesString("glob is I");
         parser.parse();
 
         assertThat(parser.globalNumeralToBaseNumeralMap.get("glob").getRomanNumeral(), is(equalTo('I')));
@@ -27,7 +27,7 @@ public class ParserTest {
 
     @Test
     public void parse_twoNumeralDefs_defKeysPopulatedCorrectly() throws Exception {
-        Parser parser = new Parser("glob is I\nprok is V");
+        Parser parser = Parser.fromNotesString("glob is I\nprok is V");
         parser.parse();
 
         assertThat(parser.globalNumeralToBaseNumeralMap.containsKey("glob"), is(true));
@@ -41,7 +41,7 @@ public class ParserTest {
                 "pish is X\n" +
                 "tegj is L";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.globalNumeralToBaseNumeralMap.containsKey("glob"), is(true));
@@ -55,7 +55,7 @@ public class ParserTest {
         String conversionNotes = "glob is I\n" +
                 "glob glob Silver is 34 Credits";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.commodityNameToCommodityMap.containsKey("Silver"), is(true));
@@ -66,7 +66,7 @@ public class ParserTest {
         String conversionNotes = "glob is I\n" +
                 "glob glob Silver is 34 Credits";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.commodityNameToCommodityMap.get("Silver").getCurrency().getName(), is(equalTo("Credits")));
@@ -77,7 +77,7 @@ public class ParserTest {
         String conversionNotes = "glob is I\n" +
                 "glob glob Silver is 34 Credits";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.commodityNameToCommodityMap.get("Silver").getValue(), is(equalTo(17.0)));
@@ -92,7 +92,7 @@ public class ParserTest {
                 "glob glob Silver is 34 Credits\n" +
                 "glob prok Gold is 57800 Credits";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.commodityNameToCommodityMap.size(), is(equalTo(2)));
@@ -107,7 +107,7 @@ public class ParserTest {
                 "glob glob Silver is 34 Credits\n" +
                 "glob prok Gold is 57800 Credits";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         Commodity silver = parser.commodityNameToCommodityMap.get("Silver");
@@ -131,7 +131,7 @@ public class ParserTest {
                 "glob prok Gold is 57800 Credits\n" +
                 "pish pish Iron is 3910 Credits";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         Commodity silver = parser.commodityNameToCommodityMap.get("Silver");
@@ -161,7 +161,7 @@ public class ParserTest {
                 "pish pish Iron is 3910 Credits\n" +
                 "how much is pish tegj glob glob ?";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.answers.size(), is(1));
@@ -178,7 +178,7 @@ public class ParserTest {
                 "pish pish Iron is 3910 Credits\n" +
                 "how much is pish tegj glob glob ?";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.answers.get(0), is("pish tegj glob glob is 42"));
@@ -193,10 +193,10 @@ public class ParserTest {
                 "glob glob Silver is 34 Credits\n" +
                 "glob prok Gold is 57800 Credits\n" +
                 "pish pish Iron is 3910 Credits\n" +
-                "how much is pish tegj glob glob ?\n"+
+                "how much is pish tegj glob glob ?\n" +
                 "how much is tegj glob glob glob?";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.answers.get(1), is("tegj glob glob glob is 53"));
@@ -211,11 +211,11 @@ public class ParserTest {
                 "glob glob Silver is 34 Credits\n" +
                 "glob prok Gold is 57800 Credits\n" +
                 "pish pish Iron is 3910 Credits\n" +
-                "how much is pish tegj glob glob ?\n"+
-                "how much is tegj glob glob glob?\n"+
+                "how much is pish tegj glob glob ?\n" +
+                "how much is tegj glob glob glob?\n" +
                 "how much is prok?";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.answers.get(2), is("prok is 5"));
@@ -232,7 +232,7 @@ public class ParserTest {
                 "pish pish Iron is 3910 Credits\n" +
                 "how many Credits is glob prok Silver ?";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.answers.get(0), is("glob prok Silver is 68 Credits"));
@@ -250,7 +250,7 @@ public class ParserTest {
                 "how many Credits is glob prok Silver ?\n" +
                 "how many Credits is glob prok Gold ?";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.answers.get(1), is("glob prok Gold is 57800 Credits"));
@@ -269,7 +269,7 @@ public class ParserTest {
                 "how many Credits is glob prok Gold ?\n" +
                 "how many Credits is glob prok Iron ?";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.answers.get(2), is("glob prok Iron is 782 Credits"));
@@ -286,7 +286,7 @@ public class ParserTest {
                 "pish pish Iron is 3910 Credits\n" +
                 "how much wood could a woodchuck chuck if a woodchuck could chuck wood?";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
         parser.parse();
 
         assertThat(parser.answers.get(0), is("I have no idea what you are talking about"));
@@ -313,7 +313,21 @@ public class ParserTest {
                 "glob prok Iron is 782 Credits\n" +
                 "I have no idea what you are talking about";
 
-        Parser parser = new Parser(conversionNotes);
+        Parser parser = Parser.fromNotesString(conversionNotes);
+        String answer = parser.parse();
+
+        assertThat(answer, is(equalTo(expectedAnswer)));
+    }
+
+    @Test
+    public void fromFile_fileExists_answerReturnedSuccessfully() throws Exception {
+        String expectedAnswer = "pish tegj glob glob is 42\n" +
+                "glob prok Silver is 68 Credits\n" +
+                "glob prok Gold is 57800 Credits\n" +
+                "glob prok Iron is 782 Credits\n" +
+                "I have no idea what you are talking about";
+
+        Parser parser = Parser.fromFile(ParserTest.class.getResource("galacticExchange1.txt").getFile());
         String answer = parser.parse();
 
         assertThat(answer, is(equalTo(expectedAnswer)));
